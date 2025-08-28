@@ -29,4 +29,25 @@ Ele possui área exclusiva para **barbeiros** (administração) e uma interface 
 
 ## 📂 Estrutura do Projeto
 
-    
+<img src="./public/img/imagem_estrutura_projeto.png" alt="imagem_estrutura" width="100" height="auto">
+
+---
+
+## ▶️ Como Executar o Projeto
+
+1. Clone este repositório:
+   ```bash
+   git clone https://github.com/seu-usuario/barberApp.git
+
+2. Abra o arquivo index.html diretamente no navegador.
+
+⚠️ O projeto não requer servidor backend neste momento (100% frontend).
+
+---
+
+## 📌 Melhorias Futuras
+
+- Integração com banco de dados (MySQL ou Firebase)
+- API REST para agendamentos em tempo real
+- Notificações por e-mail ou WhatsApp para clientes
+- Área administrativa com relatórios avançados
