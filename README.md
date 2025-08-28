@@ -29,13 +29,14 @@ Ele possui área exclusiva para **barbeiros** (administração) e uma interface 
 
 ## 📂 Estrutura do Projeto
 
-<img src="./public/img/imagem_estrutura_projeto.png" alt="imagem_estrutura" width="100" height="auto">
+<img src="./public/img/imagem_estrutura_projeto.png" alt="imagem_estrutura" width="200" height="auto">
 
 ---
 
 ## ▶️ Como Executar o Projeto
 
 1. Clone este repositório:
+
    ```bash
    git clone https://github.com/seu-usuario/barberApp.git
 
