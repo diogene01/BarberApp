@@ -38,7 +38,7 @@ Ele possui área exclusiva para **barbeiros** (administração) e uma interface 
 1. Clone este repositório:
 
    ```bash
-   git clone https://github.com/seu-usuario/barberApp.git
+   git clone https://github.com/diogene01/BarberApp.git
 
 2. Abra o arquivo index.html diretamente no navegador.
 
