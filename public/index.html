@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barber App - Sistema de Barbearia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .stat-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .nav-link.active {
+            background-color: #e5e7eb;
+            color: #1f2937;
+            font-weight: 600;
+        }
+        .modal, #login-screen {
+            transition: opacity 0.3s ease;
+        }
+        /* Garante que o clique seja no botão, não no ícone dentro dele */
+        .fas, .fab {
+            pointer-events: none;
+        }
+        /* Estilos para o seletor de horário */
+        .time-slot {
+            cursor: pointer;
+            border: 1px solid #d1d5db;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .time-slot:hover {
+            background-color: #e5e7eb;
+        }
+        .time-slot.selected {
+            background-color: #3b82f6; /* Cor de fallback */
+            color: white;
+            border-color: #3b82f6; /* Cor de fallback */
+        }
+        .time-slot.disabled {
+            cursor: not-allowed;
+            background-color: #f3f4f6;
+            color: #9ca3af;
+            text-decoration: line-through;
+        }
+        #customer-view {
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <!-- TELA DE LOGIN E CADASTRO -->
+    <div id="login-screen" class="flex items-center justify-center min-h-screen bg-gray-100">
+        <div class="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-lg">
+            <div class="text-center">
+                <i data-style="primary-text" class="fas fa-cut text-5xl text-slate-700"></i>
+                <h2 class="mt-4 text-3xl font-bold text-gray-900">Barber App</h2>
+                <p class="mt-2 text-sm text-gray-600">Faça seu login para continuar</p>
+            </div>
+            
+            <!-- Formulário de Login -->
+            <div id="login-form-container">
+                <form id="admin-login-form">
+                    <h3 class="text-lg font-medium text-center text-gray-700 mb-4">Acesso do Barbeiro</h3>
+                    <div class="space-y-4">
+                        <input type="email" id="admin-email" value="admin@barber.com" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500" placeholder="Email do Admin" required>
+                        <input type="password" id="admin-password" value="1234" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500" placeholder="Senha" required>
+                    </div>
+                    <button type="submit" data-style="primary-bg" class="w-full px-4 py-2 mt-6 font-semibold text-white rounded-md hover:opacity-90 transition-opacity">Entrar no Painel</button>
+                </form>
+                <div class="my-4 flex items-center justify-center"><span class="px-2 text-sm text-gray-500 bg-gray-100">OU</span></div>
+                <form id="client-login-form">
+                     <h3 class="text-lg font-medium text-center text-gray-700 mb-4">Acesso do Cliente</h3>
+                    <div class="space-y-4">
+                        <input type="email" id="client-email" value="cliente@email.com" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Seu Email" required>
+                        <input type="password" id="client-password" value="1234" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Sua Senha" required>
+                    </div>
+                    <button type="submit" data-style="primary-bg" class="w-full px-4 py-2 mt-6 font-semibold text-white rounded-md hover:opacity-90 transition-opacity">Agendar Horário</button>
+                </form>
+                <p class="mt-6 text-center text-sm">
+                    <a href="#" id="show-register-link" data-style="primary-text" class="font-medium text-slate-700 hover:text-slate-600">Não tem uma conta? Cadastre-se</a>
+                </p>
+            </div>
+
+            <!-- Formulário de Cadastro -->
+            <div id="register-form-container" class="hidden">
+                 <form id="register-form">
+                    <h3 class="text-xl font-bold text-center text-gray-800 mb-4">Crie sua Conta</h3>
+                    <div class="space-y-4">
+                        <input type="text" id="register-name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500" placeholder="Nome Completo" required>
+                        <input type="email" id="register-email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500" placeholder="Seu Melhor Email" required>
+                        <input type="password" id="register-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500" placeholder="Crie uma Senha" required>
+                    </div>
+                    <button type="submit" data-style="primary-bg" class="w-full px-4 py-2 mt-6 font-semibold text-white bg-slate-700 rounded-md hover:opacity-90 transition-opacity">Criar Conta</button>
+                </form>
+                 <p class="mt-6 text-center text-sm">
+                    <a href="#" id="show-login-link" data-style="primary-text" class="font-medium text-slate-700 hover:text-slate-600">Já tem uma conta? Faça Login</a>
+                </p>
+            </div>
+            
+            <p id="login-error" class="text-center text-red-500 text-sm mt-4 hidden"></p>
+        </div>
+    </div>
+
+    <!-- APLICAÇÃO PRINCIPAL (ADMIN E CLIENTE) -->
+    <div id="app-wrapper" class="hidden">
+        <!-- VISÃO DO ADMIN (BARBEIRO) -->
+        <div id="admin-view" class="flex h-screen bg-gray-100 hidden">
+            <div class="hidden md:flex flex-col w-64 bg-white shadow-lg">
+                <div class="flex items-center justify-center h-16 bg-white shadow-md">
+                    <img src="" class="app-logo w-10 h-10 mr-2 rounded-full object-cover">
+                    <h1 class="text-xl font-bold text-gray-800">Admin Barber</h1>
+                </div>
+                <div class="flex flex-col flex-grow p-4">
+                    <nav id="sidebar-nav" class="flex flex-col space-y-2">
+                        <a href="#" data-target="page-dashboard" class="nav-link flex items-center px-4 py-2 rounded-md"><i class="fas fa-chart-pie mr-3"></i> Dashboard</a>
+                        <a href="#" data-target="page-appointments" class="nav-link flex items-center px-4 py-2 rounded-md"><i class="fas fa-calendar-alt mr-3"></i> Agenda</a>
+                        <a href="#" data-target="page-services" class="nav-link flex items-center px-4 py-2 rounded-md"><i class="fas fa-cut mr-3"></i> Serviços</a>
+                        <a href="#" data-target="page-plans" class="nav-link flex items-center px-4 py-2 rounded-md"><i class="fas fa-gem mr-3"></i> Planos Mensais</a>
+                        <a href="#" data-target="page-clients" class="nav-link flex items-center px-4 py-2 rounded-md"><i class="fas fa-users mr-3"></i> Clientes</a>
+                        <a href="#" data-target="page-expenses" class="nav-link flex items-center px-4 py-2 rounded-md"><i class="fas fa-wallet mr-3"></i> Despesas</a>
+                        <a href="#" data-target="page-subscription" class="nav-link flex items-center px-4 py-2 rounded-md"><i class="fas fa-star mr-3"></i> Minha Assinatura</a>
+                        <a href="#" data-target="page-settings" class="nav-link flex items-center px-4 py-2 rounded-md"><i class="fas fa-cog mr-3"></i> Configurações</a>
+                    </nav>
+                </div>
+            </div>
+            <div class="flex flex-col flex-grow">
+                <header class="flex items-center h-16 px-6 bg-white shadow-md justify-between">
+                    <h2 id="page-title" class="text-lg font-semibold"></h2>
+                    <button class="logout-btn px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700">Sair</button>
+                </header>
+                <main class="flex-grow p-6 overflow-y-auto">
+                    <div id="page-dashboard" class="page-content"></div>
+                    <div id="page-appointments" class="page-content hidden"></div>
+                    <div id="page-services" class="page-content hidden"></div>
+                    <div id="page-plans" class="page-content hidden"></div>
+                    <div id="page-clients" class="page-content hidden"></div>
+                    <div id="page-expenses" class="page-content hidden"></div>
+                    <div id="page-subscription" class="page-content hidden"></div>
+                    <div id="page-settings" class="page-content hidden"></div>
+                </main>
+            </div>
+        </div>
+        <!-- VISÃO DO CLIENTE -->
+        <div id="customer-view" class="hidden"></div>
+    </div>
+    
+    <!-- MODAL Genérico -->
+    <div id="modal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-md">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h3 id="modal-title" class="text-xl font-bold"></h3>
+                <button id="modal-close-btn" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+            </div>
+            <div id="modal-body" class="p-6"></div>
+        </div>
+    </div>
+    
+    <!-- Caixa de Mensagem (Substitui o alert) -->
+    <div id="message-box" class="fixed top-5 right-5 bg-green-500 text-white py-3 px-5 rounded-lg shadow-lg z-50 opacity-0 transition-opacity duration-300">
+        <p id="message-text"></p>
+    </div>
+    <script src="../src/assets/js/index.js" type="module"></script>
+</body>
+</html>
