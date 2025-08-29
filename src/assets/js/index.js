@@ -1,3 +1,5 @@
+import { formatCurrency, formatDate } from "../../utils/formatting.js";
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- ELEMENTOS DO DOM ---
@@ -70,17 +72,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- FUNÇÕES GERAIS ---
-    const formatCurrency = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    const formatDate = (dateString) => new Date(dateString).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
-
     function showMessage(text, type = 'success') {
         messageText.textContent = text;
         messageBox.className = `fixed top-5 right-5 text-white py-3 px-5 rounded-lg shadow-lg z-50 opacity-0 transition-opacity duration-300 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+        
+        // 1. Garante que a div está visível no layout para a animação funcionar
+        messageBox.classList.remove('hidden');
+        // 2. Força um "reflow" para o navegador registrar a mudança de display antes da opacidade.
+        // Um pequeno truque para garantir que a transição de fade-in aconteça.
+        void messageBox.offsetWidth; 
         messageBox.classList.remove('opacity-0');
         setTimeout(() => {
             messageBox.classList.add('opacity-0');
-        }, 3000);
+
+            // 5. DEPOIS que a animação terminar (300ms), esconde a div completamente.
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+            }, 300); // <-- Tempo igual ao da sua transição (duration-300)
+
+        }, 2000);
     }
 
     function applyVisualChanges() {
