@@ -29,7 +29,7 @@ Ele possui área exclusiva para **barbeiros** (administração) e uma interface 
 
 ## 📂 Estrutura do Projeto
 
-<img src="./public/img/imagem_estrutura_projeto.png" alt="imagem_estrutura" width="200" height="auto">
+<img src="./frontend/public/img/imagem_estrutura_projeto.png" alt="imagem_estrutura" width="200" height="auto">
 
 ---
 
