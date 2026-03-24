@@ -24,14 +24,13 @@
             color: #1f2937;
             font-weight: 600;
         }
-        .modal, #login-screen {
+        .modal, #login-screen, #barber-code-screen {
             transition: opacity 0.3s ease;
         }
-        /* Garante que o clique seja no botão, não no ícone dentro dele */
-        .fas, .fab {
+        /* Evita que o clique em um ícone DENTRO de um BOTÃO anule a ação do botão */
+        button .fas, button .fab {
             pointer-events: none;
         }
-        /* Estilos para o seletor de horário */
         .time-slot {
             cursor: pointer;
             border: 1px solid #d1d5db;
@@ -44,9 +43,9 @@
             background-color: #e5e7eb;
         }
         .time-slot.selected {
-            background-color: #3b82f6; /* Cor de fallback */
+            background-color: #3b82f6;
             color: white;
-            border-color: #3b82f6; /* Cor de fallback */
+            border-color: #3b82f6;
         }
         .time-slot.disabled {
             cursor: not-allowed;
@@ -58,6 +57,17 @@
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
+        }
+        .password-container {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #9ca3af;
         }
     </style>
 </head>
@@ -72,42 +82,59 @@
                 <p class="mt-2 text-sm text-gray-600">Faça seu login para continuar</p>
             </div>
             
-            <!-- Formulário de Login -->
             <div id="login-form-container">
                 <form id="admin-login-form">
                     <h3 class="text-lg font-medium text-center text-gray-700 mb-4">Acesso do Barbeiro</h3>
                     <div class="space-y-4">
-                        <input type="email" id="admin-email" value="admin@barber.com" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500" placeholder="Email do Admin" required>
-                        <input type="password" id="admin-password" value="1234" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500" placeholder="Senha" required>
+                        <input type="email" id="barber-email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500" placeholder="email (barbeiro)" required>
+                        <div class="password-container">
+                            <input type="password" id="barber-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500" placeholder="Crie uma Senha" required>
+                            <i class="fas fa-eye-slash absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-600" data-toggle-password="barber-password"></i>
+                        </div>
                     </div>
-                    <button type="submit" data-style="primary-bg" class="w-full px-4 py-2 mt-6 font-semibold text-white rounded-md hover:opacity-90 transition-opacity">Entrar no Painel</button>
+                    <button type="submit" data-style="primary-bg" class="w-full px-4 py-2 mt-6 font-semibold text-white bg-[#334155] rounded-md hover:opacity-90 transition-opacity">Entrar no Painel</button>
                 </form>
                 <div class="my-4 flex items-center justify-center"><span class="px-2 text-sm text-gray-500 bg-gray-100">OU</span></div>
                 <form id="client-login-form">
-                     <h3 class="text-lg font-medium text-center text-gray-700 mb-4">Acesso do Cliente</h3>
+                    <h3 class="text-lg font-medium text-center text-gray-700 mb-4">Acesso do Cliente</h3>
                     <div class="space-y-4">
-                        <input type="email" id="client-email" value="cliente@email.com" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Seu Email" required>
-                        <input type="password" id="client-password" value="1234" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Sua Senha" required>
+                        <input type="email" id="client-email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="email (cliente)" required>
+                        <div class="password-container">
+                            <input type="password" id="client-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500" placeholder="Crie uma Senha" required>
+                            <i class="fas fa-eye-slash absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-600" data-toggle-password="client-password"></i>
+                        </div>
                     </div>
-                    <button type="submit" data-style="primary-bg" class="w-full px-4 py-2 mt-6 font-semibold text-white rounded-md hover:opacity-90 transition-opacity">Agendar Horário</button>
+                    <button type="submit" data-style="primary-bg" class="w-full px-4 py-2 mt-6 font-semibold text-white bg-[#334155] rounded-md hover:opacity-90 transition-opacity">Agendar Horário</button>
                 </form>
                 <p class="mt-6 text-center text-sm">
                     <a href="#" id="show-register-link" data-style="primary-text" class="font-medium text-slate-700 hover:text-slate-600">Não tem uma conta? Cadastre-se</a>
                 </p>
             </div>
 
-            <!-- Formulário de Cadastro -->
             <div id="register-form-container" class="hidden">
-                 <form id="register-form">
+                <form id="register-form">
                     <h3 class="text-xl font-bold text-center text-gray-800 mb-4">Crie sua Conta</h3>
                     <div class="space-y-4">
                         <input type="text" id="register-name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500" placeholder="Nome Completo" required>
                         <input type="email" id="register-email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500" placeholder="Seu Melhor Email" required>
-                        <input type="password" id="register-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500" placeholder="Crie uma Senha" required>
+                        <input type="tel" id="register-phone" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500" placeholder="(xx) xxxxx-xxxx" required>
+                        <div class="password-container">
+                            <input type="password" id="register-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500" placeholder="Crie uma Senha" required>
+                            <i class="fas fa-eye-slash absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-600" data-toggle-password="register-password"></i>
+                        </div>
+                        <div class="password-container">
+                            <input type="password" id="register-confirm-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500" placeholder="Confirme a Senha" required>
+                            <i class="fas fa-eye-slash absolute top-1/2 right-4 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-gray-600" data-toggle-password="register-confirm-password"></i>
+                        </div>
+                        <select id="user-type" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500" required>
+                            <option value="">Selecione o tipo de conta</option>
+                            <option value="client">Cliente</option>
+                            <option value="barber">Barbeiro</option>
+                        </select>
                     </div>
                     <button type="submit" data-style="primary-bg" class="w-full px-4 py-2 mt-6 font-semibold text-white bg-slate-700 rounded-md hover:opacity-90 transition-opacity">Criar Conta</button>
                 </form>
-                 <p class="mt-6 text-center text-sm">
+                <p class="mt-6 text-center text-sm">
                     <a href="#" id="show-login-link" data-style="primary-text" class="font-medium text-slate-700 hover:text-slate-600">Já tem uma conta? Faça Login</a>
                 </p>
             </div>
@@ -115,15 +142,26 @@
             <p id="login-error" class="text-center text-red-500 text-sm mt-4 hidden"></p>
         </div>
     </div>
+    
+    <div id="barber-code-screen" class="flex items-center justify-center min-h-screen bg-gray-100 hidden">
+        <div class="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-lg text-center">
+            <i data-style="primary-text" class="fas fa-cut text-5xl text-slate-700"></i>
+            <h2 class="mt-4 text-2xl font-bold text-gray-900">Selecione sua Barbearia</h2>
+            <p class="mt-2 text-sm text-gray-600">Por favor, insira o código da barbearia para continuar.</p>
+            <form id="barber-code-form" class="space-y-4 mt-6">
+                <input type="text" id="barber-code-input" class="w-full px-4 py-2 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Código da Barbearia" required>
+                <button type="submit" data-style="primary-bg" class="w-full px-4 py-2 mt-6 font-semibold text-white bg-[#334155] rounded-md hover:opacity-90 transition-opacity">Entrar</button>
+            </form>
+            <p id="barber-code-error" class="text-red-500 text-sm mt-4 hidden"></p>
+        </div>
+    </div>
 
-    <!-- APLICAÇÃO PRINCIPAL (ADMIN E CLIENTE) -->
     <div id="app-wrapper" class="hidden">
-        <!-- VISÃO DO ADMIN (BARBEIRO) -->
         <div id="admin-view" class="flex h-screen bg-gray-100 hidden">
             <div class="hidden md:flex flex-col w-64 bg-white shadow-lg">
                 <div class="flex items-center justify-center h-16 bg-white shadow-md">
                     <img src="" class="app-logo w-10 h-10 mr-2 rounded-full object-cover">
-                    <h1 class="text-xl font-bold text-gray-800">Admin Barber</h1>
+                    <h1 id="admin-name-display" class="text-xl font-bold text-gray-800"></h1>
                 </div>
                 <div class="flex flex-col flex-grow p-4">
                     <nav id="sidebar-nav" class="flex flex-col space-y-2">
@@ -155,11 +193,9 @@
                 </main>
             </div>
         </div>
-        <!-- VISÃO DO CLIENTE -->
         <div id="customer-view" class="hidden"></div>
     </div>
     
-    <!-- MODAL Genérico -->
     <div id="modal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
         <div class="bg-white rounded-lg shadow-2xl w-full max-w-md">
             <div class="flex justify-between items-center p-4 border-b">
@@ -170,10 +206,9 @@
         </div>
     </div>
     
-    <!-- Caixa de Mensagem (Substitui o alert) -->
-    <div id="message-box" class="fixed top-5 right-5 bg-green-500 text-white py-3 px-5 rounded-lg shadow-lg z-50 opacity-0 transition-opacity duration-300">
+    <div id="message-box" class="fixed top-5 right-5 bg-green-500 text-white py-3 px-5 rounded-lg shadow-lg z-50 opacity-0 transition-opacity duration-300 hidden">
         <p id="message-text"></p>
     </div>
-    <script src="../src/assets/js/index.js" type="module"></script>
-</body>
+    <script type="module" src="../src/assets/js/index.js"></script>
+    </body>
 </html>
