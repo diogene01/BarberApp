@@ -6,12 +6,12 @@ import { socket } from '../components/socket.js';
 
 export function renderServicesPage(container) {
 
-    // // --- SOCKET NO TOPO (BOA PRÁTICA) ---
-    // socket.off('servicos_atualizados');
-    // socket.on('servicos_atualizados', async () => {
-    //     await fetchServices(activeBarber.id);
-    //     renderServicesPage(container);
-    // });
+    // --- SOCKET NO TOPO (BOA PRÁTICA) ---
+    socket.off('servicos_atualizados');
+    socket.on('servicos_atualizados', async () => {
+        await fetchServices(activeBarber.id);
+        renderServicesPage(container);
+    });
 
     const rows = barberData.services.map(s => `
         <tr class="border-b hover:bg-gray-50" data-id="${s.id}">

@@ -1,7 +1,9 @@
-import { barberData } from '../api/barberData.js';
+import { barberData, fetchSettings } from '../api/barberData.js';
 import { activeBarber } from '../api/auth.js';
+import { socket } from '../components/socket.js';
 
 export function renderSettingsPage(container) {
+
     const slots = [...barberData.availableTimeSlots].sort();
 
     container.innerHTML = `
@@ -11,22 +13,33 @@ export function renderSettingsPage(container) {
             <div class="space-y-6">
                 <div class="border-t pt-6">
                     <h3 class="text-lg font-semibold mb-4 text-gray-700">Identidade da Barbearia</h3>
+                    
                     <div class="mb-6">
                         <label for="barber-name" class="block text-sm font-medium text-gray-600 mb-1">Nome da Barbearia / Barbeiro</label>
                         <input type="text" id="barber-name" value="${activeBarber.name}"
                             class="w-full border border-gray-300 rounded-md p-2 outline-none focus:ring-1 focus:ring-slate-500 transition-all">
                     </div>
+
                     <div class="mb-6">
                         <label for="barber-phone" class="block text-sm font-medium text-gray-600 mb-1">Telefone/WhatsApp</label>
                         <input type="text" id="barber-phone" value="${activeBarber.phone}"
                             class="w-full border border-gray-300 rounded-md p-2 outline-none focus:ring-1 focus:ring-slate-500 transition-all">
                     </div>
+
                     <div class="mb-6">
-                        <label for="barber-email" class="block text-sm font-medium text-gray-600 mb-1">E-mail (Login)</label>
+                        <label for="edit-barber-email" class="block text-sm font-medium text-gray-600 mb-1">E-mail (Login)</label>
                         <input type="email" id="edit-barber-email" value="${activeBarber.email}" 
                                 class="w-full border border-gray-200 rounded-md p-2 mt-1 bg-gray-50 text-gray-500" disabled>
                         <p class="text-xs text-gray-400 mt-1">* O e-mail não pode ser alterado por segurança.</p>
                     </div>
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-600 mb-1">Código da Barbearia (ID)</label>
+                        <input type="text" value="${activeBarber.code}" 
+                                class="w-full border border-gray-200 rounded-md p-2 mt-1 bg-gray-50 text-gray-500 font-mono" disabled>
+                        <p class="text-xs text-gray-400 mt-1">* Este código identifica sua barbearia para suporte e integrações.</p>
+                    </div>
+
                     <div class="flex items-center gap-6">
                         <img src="${activeBarber.logo_url}" class="app-logo w-24 h-24 rounded-full object-cover bg-gray-100 border-2 border-gray-200 shadow-sm">
                         <div class="w-full">
@@ -68,9 +81,9 @@ export function renderSettingsPage(container) {
 
                 <div class="border-t pt-10 mt-6 flex flex-col space-y-8">
                     
-                    <div class="flex justify-end">
+                    <div class="flex justify-center">
                         <button type="button" id="save-settings-btn"
-                                class="w-full md:w-auto bg-slate-700 text-white px-10 py-3 rounded-lg font-bold hover:bg-slate-800 transition-all shadow-md">
+                                class="w-full md:w-auto bg-slate-700 text-white px-5 py-3 rounded-lg font-bold hover:bg-slate-800 transition-all shadow-md">
                             Salvar Alterações
                         </button>
                     </div>

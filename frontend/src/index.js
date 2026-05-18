@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (btn.classList.contains('cancel-appointment-btn')) {
-            showConfirmModal('Excluir este agendamento?', () => handleCancelAppointment(id)); return;
+            showConfirmModal('Cancelar este agendamento?', () => handleCancelAppointment(id)); return;
         }
 
         // Horários de atendimento (configurações)

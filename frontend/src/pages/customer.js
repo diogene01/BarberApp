@@ -255,7 +255,6 @@ export async function showSchedulingModal(service, appointmentToEdit = null) {
     socket.off('config_atualizada');
     socket.on('config_atualizada', async () => {
         await fetchSettings(activeBarber.id);
-        showSchedulingModal(service, null);
     });
 
     const isEditing = !!appointmentToEdit;

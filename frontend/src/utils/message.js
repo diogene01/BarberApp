@@ -1,9 +1,9 @@
-const messageBox = document.getElementById('message-box');
-const messageText = document.getElementById('message-text');
-
-// Exibe uma notificação temporária no canto da tela
 export function showMessage(text, type = 'success') {
+    const messageBox = document.getElementById('message-box');
+    const messageText = document.getElementById('message-text');    
+
     messageText.textContent = text;
+
     messageBox.className = [
         'fixed top-5 right-5 text-white py-3 px-5 rounded-lg shadow-lg z-50',
         'opacity-0 transition-opacity duration-300',

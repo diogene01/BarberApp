@@ -11,6 +11,8 @@ export let activeBarber = null;
 // Cliente logado
 export let activeClient = null;
 
+
+const loader = document.getElementById('loadingScreen');
 // ----------------------------------------
 // LOGIN
 // ----------------------------------------
@@ -21,6 +23,8 @@ export async function handleLogin(e, role) {
     const password = document.getElementById(`${role}-password`).value;
     const loginError = document.getElementById('login-error');
 
+    loader.style.display = 'flex';
+
     try {
         const response = await fetch(`${API_URL}/login`, {
             method: 'POST',
@@ -30,10 +34,13 @@ export async function handleLogin(e, role) {
         const result = await response.json();
 
         if (!response.ok) {
+            loader.style.display = 'none';
             loginError.textContent = result.error;
             loginError.classList.remove('hidden');
+            setTimeout(() => {loginError.classList.add('hidden')}, 3000);
             return;
         }
+
 
         loginError.classList.add('hidden');
         connectSocket();
@@ -58,6 +65,7 @@ export async function handleLogin(e, role) {
 
         } else {
             activeClient = result.user;
+            loader.style.display = 'none';
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('barber-code-screen').classList.remove('hidden');
         }
@@ -80,12 +88,15 @@ export async function handleBarberCode(e) {
     barberCodeError.classList.add('hidden');
 
     try {
+        loader.style.display = 'flex';
+
         const response = await fetch(`${API_URL}/barbers?code=${code}`);
         const result = await response.json();
 
         if (!response.ok || result.length === 0) {
             barberCodeError.textContent = result.error || 'Código inválido.';
             barberCodeError.classList.remove('hidden');
+            loader.style.display = 'none';
             return;
         }
 
@@ -97,6 +108,7 @@ export async function handleBarberCode(e) {
 
         await fetchAllBarberData(activeBarber);
         renderCustomerView();
+        loader.style.display = 'none';
 
     } catch (error) {
         console.error('[Auth] Erro ao verificar código:', error);

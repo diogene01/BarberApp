@@ -119,9 +119,6 @@ export async function handleDelete(e, type) {
     const row = e.target.closest('tr');
     const id = parseInt(row.dataset.id);
 
-    console.log(id);
-    console.log(type);
-
     try {
         const response = await fetch(`${API_URL}/${type}/${id}`, { method: 'DELETE' });
         const result = await response.json();
@@ -206,7 +203,12 @@ export async function handleDeleteBarberAccount() {
 
         if (response.ok) {
             showMessage(result.message, 'success');
-            window.location.reload();
+
+            setTimeout(() => {
+                localStorage.clear();
+                window.location.reload();
+            }, 2000);
+
         } else {
             showMessage(result.error, 'error');
         }
@@ -226,7 +228,9 @@ export async function handleSaveBarberSettings() {
     const phoneInput = document.getElementById('barber-phone');
     const logoInput = document.getElementById('logo-url');
     const bgInput = document.getElementById('background-url');
+    const logoPreview = document.querySelector('.app-logo'); // A imagem redonda que aparece na tela
 
+    // 2. Validação básica
     if (!nameInput?.value.trim() || 
         !phoneInput?.value.trim() || 
         !logoInput?.value.trim() || 
@@ -235,6 +239,7 @@ export async function handleSaveBarberSettings() {
         return showMessage('Todos os campos precisam estar preenchidos!', 'error');
     }
 
+    // 3. Monta o objeto para o Back-end
     const updatedSettings = {
         newName: nameInput.value.trim(),
         newPhone: phoneInput.value.trim(),
@@ -253,10 +258,30 @@ export async function handleSaveBarberSettings() {
         const result = await response.json();
 
         if (response.ok) {
+            // --- ATUALIZAÇÃO DOS DADOS EM MEMÓRIA ---
+            // Atualizamos o objeto activeBarber para que o restante do app reflita as mudanças
+            activeBarber.name = updatedSettings.newName;
+            activeBarber.phone = updatedSettings.newPhone;
+            activeBarber.logo_url = updatedSettings.logo_url;
+            activeBarber.background_image_url = updatedSettings.background_image_url;
+
+            // --- ATUALIZAÇÃO VISUAL IMEDIATA ---
+            // Atualiza a imagem do logo que está na tela de configurações
+            if (logoPreview) {
+                logoPreview.src = updatedSettings.logo_url;
+            }
+
+            // Se você tiver um logo no Header/Sidebar, pode atualizar aqui também:
+            const headerLogo = document.getElementById('header-logo');
+            if (headerLogo) headerLogo.src = updatedSettings.logo_url;
+
             showMessage(result.message, 'success');
+
+            // 4. Sincroniza o restante dos dados (como os slots de horários)
             await fetchAllBarberData(activeBarber);
+            
         } else {
-            showMessage(result.error, 'error');
+            showMessage(result.error || 'Erro ao salvar alterações.', 'error');
         }
     } catch (error) {
         console.error('[Ação] Erro ao salvar configurações:', error);

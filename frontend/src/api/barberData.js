@@ -1,4 +1,4 @@
-import { API_URL } from './config.js';
+import { API_URL }  from './config.js';
 import { applyVisualChanges } from '../components/visualChanges.js';
 
 // Estado global dos dados do barbeiro ativo.
@@ -57,7 +57,10 @@ export async function fetchSettings(barberId) {
 
 export async function fetchAllBarberData(barber) {
     console.log(`[Dados] Carregando dados para: ${barber.name} (ID: ${barber.id})`);
+    const loader = document.getElementById('loadingScreen');
+
     try {
+
         await Promise.all([
             fetchServices(barber.id),
             fetchPlans(barber.id),
@@ -70,5 +73,7 @@ export async function fetchAllBarberData(barber) {
         console.log('[Dados] Todos os dados sincronizados.');
     } catch (error) {
         console.error('[Dados] Erro ao carregar dados do barbeiro:', error);
+    } finally {
+        loader.style.display = 'none';
     }
 }
